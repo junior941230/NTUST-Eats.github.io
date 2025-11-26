@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NTUST Eats - 台科大外送學餐</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --ntust-blue: #004ea2; /* 接近台科校徽藍 */
+        }
+        body {
+            background-color: #f4f6f8;
+            padding-bottom: 80px;
+        }
+        .navbar {
+            background-color: var(--ntust-blue) !important;
+        }
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 40px 20px;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 20px;
+        }
+        .food-card-img {
+            height: 160px;
+            object-fit: cover;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--ntust-blue);
+        }
+        .nav-pills .nav-link {
+            color: #666;
+            margin-right: 5px;
+        }
+        .restaurant-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-university me-2"></i>NTUST Eats
+            </a>
+            <button class="btn btn-outline-light position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <header class="text-center hero-section">
+        <h2 class="fw-bold">不想排一餐二餐？</h2>
+        <p class="mb-0">預訂午餐，直送 IB / TR / T4 / 宿舍</p>
+    </header>
+
+    <div class="container">
+        
+        <ul class="nav nav-pills mb-4 overflow-auto flex-nowrap pb-2" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active rounded-pill" id="pills-mon-tab" data-bs-toggle="pill" data-bs-target="#pills-mon" type="button" role="tab">週一</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill" id="pills-tue-tab" data-bs-toggle="pill" data-bs-target="#pills-tue" type="button" role="tab">週二</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill" id="pills-wed-tab" data-bs-toggle="pill" data-bs-target="#pills-wed" type="button" role="tab">週三</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill" id="pills-thu-tab" data-bs-toggle="pill" data-bs-target="#pills-thu" type="button" role="tab">週四</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill" id="pills-fri-tab" data-bs-toggle="pill" data-bs-target="#pills-fri" type="button" role="tab">週五</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+
+            <div class="tab-pane fade show active" id="pills-mon" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/1.jpg" class="card-img-top food-card-img" alt="燒臘">
+                                <span class="restaurant-badge">七樂燒臘</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">招牌三寶飯</h5>
+                                <p class="text-muted small">油雞、燒鴨、叉燒，經典港式風味。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$100</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('招牌三寶飯 - 七樂')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/2.jpg" class="card-img-top food-card-img" alt="水餃">
+                                <span class="restaurant-badge">八方雲集</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">招牌水餃套餐 (10顆+湯)</h5>
+                                <p class="text-muted small">高麗菜水餃配酸辣湯，方便快速。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$95</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('招牌水餃套餐 - 八方')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-tue" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/3.jpeg" class="card-img-top food-card-img" alt="雞肉">
+                                <span class="restaurant-badge">歐趴雞肉</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">香嫩雞肉餐盒</h5>
+                                <p class="text-muted small">舒肥雞胸肉，考試吃了會 All Pass！</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$110</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('香嫩雞肉餐盒 - 歐趴')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top food-card-img" alt="日式">
+                                <span class="restaurant-badge">京都日式</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">日式豬排丼</h5>
+                                <p class="text-muted small">現炸豬排淋上滑蛋醬汁。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$120</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('日式豬排丼 - 京都')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-wed" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/4.jpg" class="card-img-top food-card-img" alt="韓式">
+                                <span class="restaurant-badge">高麗元</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">石鍋拌飯</h5>
+                                <p class="text-muted small">韓式辣醬拌炒時蔬與肉片。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$130</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('石鍋拌飯 - 高麗元')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/5.jpg" class="card-img-top food-card-img" alt="牛排">
+                                <span class="restaurant-badge">豪想來</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">鐵板牛排麵</h5>
+                                <p class="text-muted small">黑胡椒醬淋上熱騰騰鐵板麵。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$140</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('鐵板牛排麵 - 豪想來')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-thu" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/6.jpg" class="card-img-top food-card-img" alt="餛飩">
+                                <span class="restaurant-badge">溫州大餛飩</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">鮮肉大餛飩麵</h5>
+                                <p class="text-muted small">皮薄餡多，湯頭清淡鮮美。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$90</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('鮮肉大餛飩麵 - 溫州')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/7.jpg" class="card-img-top food-card-img" alt="燒鴨">
+                                <span class="restaurant-badge">雞同鴨講</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">蜜汁叉燒飯</h5>
+                                <p class="text-muted small">特製蜜汁醬料，肉質軟嫩。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$95</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('蜜汁叉燒飯 - 雞同鴨講')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-fri" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/8.jpg" class="card-img-top food-card-img" alt="咖哩">
+                                <span class="restaurant-badge">小熊廚房</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">日式咖哩雞飯</h5>
+                                <p class="text-muted small">濃郁咖哩醬汁，搭配酥脆炸物。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$115</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('咖哩雞飯 - 小熊廚房')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="image/9.jpg" class="card-img-top food-card-img" alt="拉麵">
+                                <span class="restaurant-badge">京都日式</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">唐揚雞定食</h5>
+                                <p class="text-muted small">週五限定，好吃有味。</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">$130</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('豚骨拉麵 - 京都')">加入</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> </div>
+
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">確認訂單</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartItemsList" class="mb-3 text-muted small">
+                        尚無商品
+                    </div>
+                    
+                    <h6 class="fw-bold mt-4 mb-2"><i class="fas fa-map-marker-alt text-danger me-2"></i>選擇外送地點</h6>
+                    <form id="orderForm">
+                        <select class="form-select mb-3 bg-light" required>
+                            <option selected disabled value="">請選擇取餐點</option>
+                            <option value="IB">IB 1樓</option>
+                            <option value="T4">T4 穿堂</option>
+                            <option value="Dorm">宿舍門口</option>
+                            <option value="TR">TR 1樓</option>
+                        </select>
+                        <input type="text" class="form-control mb-2" placeholder="學號 (例: B11012345)" required>
+                        <input type="tel" class="form-control" placeholder="手機號碼" required>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary w-100" onclick="submitOrder()">確認送出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i> 訂單已送出！外送員將送達指定地點。
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let cart = [];
+
+        function addToCart(itemName) {
+            cart.push(itemName);
+            updateCartDisplay();
+            
+            // 按鈕回饋動畫
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            btn.classList.add('btn-success');
+            btn.classList.remove('btn-outline-primary');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-primary');
+            }, 800);
+        }
+
+        function updateCartDisplay() {
+            // 更新 Navbar 數字
+            document.getElementById('cartCount').innerText = cart.length;
+            
+            // 更新 Modal 列表
+            const listContainer = document.getElementById('cartItemsList');
+            if (cart.length === 0) {
+                listContainer.innerText = "尚無商品";
+            } else {
+                listContainer.innerHTML = cart.map(item => 
+                    `<div class="d-flex justify-content-between border-bottom py-2">
+                        <span>${item}</span>
+                        <span>x1</span>
+                    </div>`
+                ).join('');
+            }
+        }
+
+        function submitOrder() {
+            if(cart.length === 0) {
+                alert("購物車是空的喔！");
+                return;
+            }
+            
+            // 驗證地點是否有選
+            const locationSelect = document.querySelector('#orderForm select');
+            if (!locationSelect.value) {
+                alert("請選擇外送地點！");
+                return;
+            }
+
+            // 關閉 Modal 並顯示成功訊息
+            const modalEl = document.getElementById('cartModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+
+            const toastEl = document.getElementById('liveToast');
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+
+            // 清空購物車
+            cart = [];
+            updateCartDisplay();
+        }
+
+        // 自動切換到當前星期幾 (Optional)
+        window.onload = function() {
+            const day = new Date().getDay(); // 0=Sun, 1=Mon, ..., 5=Fri
+            const daysMap = {1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri'};
+            if (daysMap[day]) {
+                const triggerEl = document.querySelector(`#pills-${daysMap[day]}-tab`);
+                const tab = new bootstrap.Tab(triggerEl);
+                tab.show();
+            }
+        };
+    </script>
+</body>
+</html>
