@@ -9,7 +9,7 @@
     
     <style>
         :root {
-            --ntust-blue: #004ea2; /* 接近台科校徽藍 */
+            --ntust-blue: #004ea2;
         }
         body {
             background-color: #f4f6f8;
@@ -50,19 +50,39 @@
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        .price-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .points-badge {
+            background-color: #ffc107;
+            color: #000;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
 
     <nav class="navbar navbar-dark shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fas fa-university me-2"></i>NTUST Eats
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+                <img src="image/icon.png" alt="NTUST Eats Logo" height="70" class="me-2">
+                NTUST Eats
             </a>
-            <button class="btn btn-outline-light position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
-                <i class="fas fa-shopping-bag"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
-            </button>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3 small">
+                    <i class="fas fa-star text-warning"></i> <span id="navPoints">0</span> 點
+                </span>
+                <button class="btn btn-outline-light position-relative" data-bs-toggle="modal" data-bs-target="#cartModal" onclick="updateCartDisplay()">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -74,21 +94,11 @@
     <div class="container">
         
         <ul class="nav nav-pills mb-4 overflow-auto flex-nowrap pb-2" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active rounded-pill" id="pills-mon-tab" data-bs-toggle="pill" data-bs-target="#pills-mon" type="button" role="tab">週一</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link rounded-pill" id="pills-tue-tab" data-bs-toggle="pill" data-bs-target="#pills-tue" type="button" role="tab">週二</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link rounded-pill" id="pills-wed-tab" data-bs-toggle="pill" data-bs-target="#pills-wed" type="button" role="tab">週三</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link rounded-pill" id="pills-thu-tab" data-bs-toggle="pill" data-bs-target="#pills-thu" type="button" role="tab">週四</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link rounded-pill" id="pills-fri-tab" data-bs-toggle="pill" data-bs-target="#pills-fri" type="button" role="tab">週五</button>
-            </li>
+            <li class="nav-item"><button class="nav-link active rounded-pill" id="pills-mon-tab" data-bs-toggle="pill" data-bs-target="#pills-mon" type="button">週一</button></li>
+            <li class="nav-item"><button class="nav-link rounded-pill" id="pills-tue-tab" data-bs-toggle="pill" data-bs-target="#pills-tue" type="button">週二</button></li>
+            <li class="nav-item"><button class="nav-link rounded-pill" id="pills-wed-tab" data-bs-toggle="pill" data-bs-target="#pills-wed" type="button">週三</button></li>
+            <li class="nav-item"><button class="nav-link rounded-pill" id="pills-thu-tab" data-bs-toggle="pill" data-bs-target="#pills-thu" type="button">週四</button></li>
+            <li class="nav-item"><button class="nav-link rounded-pill" id="pills-fri-tab" data-bs-toggle="pill" data-bs-target="#pills-fri" type="button">週五</button></li>
         </ul>
 
         <div class="tab-content" id="pills-tabContent">
@@ -106,7 +116,7 @@
                                 <p class="text-muted small">油雞、燒鴨、叉燒，經典港式風味。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$100</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('招牌三寶飯 - 七樂')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('招牌三寶飯 - 七樂', 100)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -118,11 +128,11 @@
                                 <span class="restaurant-badge">八方雲集</span>
                             </div>
                             <div class="card-body">
-                                <h5 class="fw-bold">招牌水餃套餐 (10顆+湯)</h5>
-                                <p class="text-muted small">高麗菜水餃配酸辣湯，方便快速。</p>
+                                <h5 class="fw-bold">招牌水餃套餐</h5>
+                                <p class="text-muted small">高麗菜水餃(10顆)配酸辣湯。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$95</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('招牌水餃套餐 - 八方')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('招牌水餃套餐 - 八方', 95)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +153,7 @@
                                 <p class="text-muted small">舒肥雞胸肉，考試吃了會 All Pass！</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$110</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('香嫩雞肉餐盒 - 歐趴')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('香嫩雞肉餐盒 - 歐趴', 110)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -159,7 +169,7 @@
                                 <p class="text-muted small">現炸豬排淋上滑蛋醬汁。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$120</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('日式豬排丼 - 京都')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('日式豬排丼 - 京都', 120)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +190,7 @@
                                 <p class="text-muted small">韓式辣醬拌炒時蔬與肉片。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$130</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('石鍋拌飯 - 高麗元')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('石鍋拌飯 - 高麗元', 130)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +206,7 @@
                                 <p class="text-muted small">黑胡椒醬淋上熱騰騰鐵板麵。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$140</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('鐵板牛排麵 - 豪想來')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('鐵板牛排麵 - 豪想來', 140)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -217,7 +227,7 @@
                                 <p class="text-muted small">皮薄餡多，湯頭清淡鮮美。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$90</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('鮮肉大餛飩麵 - 溫州')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('鮮肉大餛飩麵 - 溫州', 90)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -233,7 +243,7 @@
                                 <p class="text-muted small">特製蜜汁醬料，肉質軟嫩。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$95</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('蜜汁叉燒飯 - 雞同鴨講')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('蜜汁叉燒飯 - 雞同鴨講', 95)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -254,7 +264,7 @@
                                 <p class="text-muted small">濃郁咖哩醬汁，搭配酥脆炸物。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$115</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('咖哩雞飯 - 小熊廚房')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('咖哩雞飯 - 小熊廚房', 115)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -270,7 +280,7 @@
                                 <p class="text-muted small">週五限定，好吃有味。</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">$130</span>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('豚骨拉麵 - 京都')">加入</button>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="addToCart('唐揚雞定食 - 京都', 130)">加入</button>
                                 </div>
                             </div>
                         </div>
@@ -278,7 +288,8 @@
                 </div>
             </div>
 
-        </div> </div>
+        </div> 
+    </div>
 
     <div class="modal fade" id="cartModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -288,10 +299,36 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="cartItemsList" class="mb-3 text-muted small">
+                    <div id="cartItemsList" class="mb-3 text-muted small border-bottom pb-2">
                         尚無商品
                     </div>
                     
+                    <div id="priceSummary" class="bg-light p-3 rounded mb-3">
+                        <div class="price-summary-row">
+                            <span>餐點小計</span>
+                            <span id="subTotal">$0</span>
+                        </div>
+                        <div class="price-summary-row text-muted small">
+                            <span>外送費 (首份$10, 續+$5)</span>
+                            <span id="deliveryFee">$0</span>
+                        </div>
+                        
+                        <div class="price-summary-row mt-2 pt-2 border-top align-items-center" id="pointsSection">
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">集點折抵</span>
+                                <span class="badge bg-warning text-dark">現有 <span id="modalPoints">0</span> 點</span>
+                            </div>
+                            <div id="pointsAction">
+                                <small class="text-muted">滿10點可折$10</small>
+                            </div>
+                        </div>
+
+                        <div class="price-summary-row mt-2 pt-2 border-top fw-bold text-dark fs-5">
+                            <span>總金額</span>
+                            <span id="grandTotal" class="text-primary">$0</span>
+                        </div>
+                    </div>
+
                     <h6 class="fw-bold mt-4 mb-2"><i class="fas fa-map-marker-alt text-danger me-2"></i>選擇外送地點</h6>
                     <form id="orderForm">
                         <select class="form-select mb-3 bg-light" required>
@@ -307,7 +344,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary w-100" onclick="submitOrder()">確認送出</button>
+                    <button type="button" class="btn btn-primary w-100" onclick="submitOrder()">確認送出 (累積1點)</button>
                 </div>
             </div>
         </div>
@@ -317,7 +354,7 @@
         <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert">
             <div class="d-flex">
                 <div class="toast-body">
-                    <i class="fas fa-check-circle me-2"></i> 訂單已送出！外送員將送達指定地點。
+                    <i class="fas fa-check-circle me-2"></i> <span id="toastMsg">訂單已送出！</span>
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
@@ -326,10 +363,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // --- 修改處 1：不再讀取 localStorage，每次重新整理直接歸零 ---
         let cart = [];
+        let userPoints = 0; // 預設 0 點 (若想測試折扣功能，可將此處改成 10)
+        let usePointsDiscount = false;
 
-        function addToCart(itemName) {
-            cart.push(itemName);
+        // 初始化顯示點數
+        document.getElementById('navPoints').innerText = userPoints;
+
+        function addToCart(itemName, price) {
+            cart.push({ name: itemName, price: price });
             updateCartDisplay();
             
             // 按鈕回饋動畫
@@ -349,18 +392,74 @@
             // 更新 Navbar 數字
             document.getElementById('cartCount').innerText = cart.length;
             
-            // 更新 Modal 列表
+            // 更新餐點列表
             const listContainer = document.getElementById('cartItemsList');
             if (cart.length === 0) {
                 listContainer.innerText = "尚無商品";
             } else {
                 listContainer.innerHTML = cart.map(item => 
                     `<div class="d-flex justify-content-between border-bottom py-2">
-                        <span>${item}</span>
-                        <span>x1</span>
+                        <span>${item.name}</span>
+                        <span>$${item.price}</span>
                     </div>`
                 ).join('');
             }
+
+            // 更新價格計算
+            calculateTotal();
+
+            // 更新點數顯示
+            document.getElementById('modalPoints').innerText = userPoints;
+            const pointsActionDiv = document.getElementById('pointsAction');
+            
+            // 重置折扣狀態
+            usePointsDiscount = false;
+
+            if (userPoints >= 10) {
+                pointsActionDiv.innerHTML = `
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="discountCheck" onchange="toggleDiscount()">
+                        <label class="form-check-label small" for="discountCheck">使用10點折$10</label>
+                    </div>
+                `;
+            } else {
+                pointsActionDiv.innerHTML = `<small class="text-muted">還差 ${10 - userPoints} 點可折抵</small>`;
+            }
+        }
+
+        function toggleDiscount() {
+            const checkbox = document.getElementById('discountCheck');
+            usePointsDiscount = checkbox.checked;
+            calculateTotal(); 
+        }
+
+        function calculateTotal() {
+            if (cart.length === 0) {
+                document.getElementById('subTotal').innerText = "$0";
+                document.getElementById('deliveryFee').innerText = "$0";
+                document.getElementById('grandTotal').innerText = "$0";
+                return;
+            }
+
+            let subTotal = cart.reduce((sum, item) => sum + item.price, 0);
+
+            // 外送費: 第一份10元，之後每份5元
+            let deliveryFee = 0;
+            if (cart.length > 0) {
+                deliveryFee = 10 + (cart.length - 1) * 5;
+            }
+
+            let discountAmount = usePointsDiscount ? 10 : 0;
+            let grandTotal = subTotal + deliveryFee - discountAmount;
+
+            document.getElementById('subTotal').innerText = `$${subTotal}`;
+            document.getElementById('deliveryFee').innerText = `$${deliveryFee}`;
+            
+            let totalHtml = `$${grandTotal}`;
+            if (usePointsDiscount) {
+                totalHtml += ` <span class="badge bg-danger small ms-2">- 折扣$10</span>`;
+            }
+            document.getElementById('grandTotal').innerHTML = totalHtml;
         }
 
         function submitOrder() {
@@ -369,36 +468,52 @@
                 return;
             }
             
-            // 驗證地點是否有選
             const locationSelect = document.querySelector('#orderForm select');
             if (!locationSelect.value) {
                 alert("請選擇外送地點！");
                 return;
             }
 
-            // 關閉 Modal 並顯示成功訊息
+            // 扣點與集點邏輯
+            if (usePointsDiscount) {
+                userPoints -= 10; 
+            }
+            userPoints += 1; 
+            
+            // --- 修改處 2：這裡移除了 localStorage.setItem ---
+            // 點數只會存在目前的記憶體中，重新整理就會不見
+            
+            // 更新 UI 點數
+            document.getElementById('navPoints').innerText = userPoints;
+
+            // 關閉 Modal
             const modalEl = document.getElementById('cartModal');
             const modal = bootstrap.Modal.getInstance(modalEl);
             modal.hide();
 
+            // 顯示成功訊息
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = `訂單已送出！目前累積 ${userPoints} 點`;
+            
             const toastEl = document.getElementById('liveToast');
             const toast = new bootstrap.Toast(toastEl);
             toast.show();
 
             // 清空購物車
             cart = [];
+            usePointsDiscount = false;
             updateCartDisplay();
         }
 
-        // 自動切換到當前星期幾 (Optional)
         window.onload = function() {
-            const day = new Date().getDay(); // 0=Sun, 1=Mon, ..., 5=Fri
+            const day = new Date().getDay();
             const daysMap = {1: 'mon', 2: 'tue', 3: 'wed', 4: 'thu', 5: 'fri'};
             if (daysMap[day]) {
                 const triggerEl = document.querySelector(`#pills-${daysMap[day]}-tab`);
                 const tab = new bootstrap.Tab(triggerEl);
                 tab.show();
             }
+            document.getElementById('navPoints').innerText = userPoints;
         };
     </script>
 </body>
